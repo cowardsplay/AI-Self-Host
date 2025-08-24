@@ -4,12 +4,12 @@ A Flask-based web application that provides a chat interface to interact with Ol
 
 ## Features
 
-- 🤖 Chat interface with Ollama AI models
-- 💻 Syntax highlighting for code blocks
-- 📋 Copy-to-clipboard functionality for code
-- 🎨 Modern, responsive web interface
-- 🔄 Real-time chat experience
-- 🛠️ Two deployment options (local and network-accessible)
+- Chat interface with Ollama AI models
+- Syntax highlighting for code blocks
+- Copy-to-clipboard functionality for code
+- Modern, responsive web interface
+- Real-time chat experience
+- Two deployment options (local and network-accessible)
 
 ## Prerequisites
 
@@ -177,5 +177,6 @@ CodeReview/
 - The interface supports code block formatting with syntax highlighting and copy functionality
 
 ## License
+
 
 This project is open source. Feel free to modify and distribute as needed. 
