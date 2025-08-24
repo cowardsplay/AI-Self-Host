@@ -1,182 +1,177 @@
-# AI Chat Application
+# Ollama Flask Chatbot
 
-A Flask-based web application that provides a chat interface to interact with Ollama AI models. The application features a modern web UI with syntax highlighting for code blocks and inline code formatting.
+A simple Flask web application that provides a chat interface for Ollama AI models with Wiki.js API integration.
 
 ## Features
 
-- Chat interface with Ollama AI models
-- Syntax highlighting for code blocks
-- Copy-to-clipboard functionality for code
-- Modern, responsive web interface
-- Real-time chat experience
-- Two deployment options (local and network-accessible)
+- Web-based chat interface with syntax highlighting for code
+- Support for both Ollama CLI and HTTP API
+- **Wiki.js API integration** for accessing structured content
+- Health check endpoints for monitoring
+- Test page for troubleshooting
+- Windows-compatible with proper encoding handling
+- URL content fetching and analysis
 
 ## Prerequisites
 
-Before running this application, you need to have the following installed:
-
-### 1. Python
-- Python 3.7 or higher
-- Download from [python.org](https://www.python.org/downloads/)
-- **Important**: Make sure to check "Add Python to PATH" during installation
-
-### 2. Ollama
-- Install Ollama from [ollama.ai](https://ollama.ai/)
-- After installation, pull the required model:
-  ```bash
-  ollama pull llama3.1:latest
-  ```
-- Start the Ollama service:
-  ```bash
-  ollama serve
-  ```
+1. **Python 3.7+** installed on your system
+2. **Ollama** installed and running (download from https://ollama.ai/)
+3. **Wiki.js server** running (optional, for enhanced content access)
 
 ## Installation
 
 1. **Clone or download this repository**
-   ```bash
-   git clone <repository-url>
-   cd CodeReview
-   ```
 
-2. **Install Python dependencies**
+2. **Install Python dependencies:**
    ```bash
    pip install -r requirements.txt
    ```
 
-   Or install manually:
-   ```bash
-   pip install flask requests
-   ```
+3. **Install and start Ollama:**
+   - Download from https://ollama.ai/
+   - Install and start the Ollama service
+   - Pull a model (e.g., `ollama pull llama3.1:latest`)
 
-## Running the Application
-
-### Option 1: Local Access Only (app.py)
-```bash
-python app.py
-```
-- **Access URL**: http://localhost:5000
-- **Best for**: Development and local testing
-
-### Option 2: Network Access (botv2.py)
-```bash
-python botv2.py
-```
-- **Access URL**: http://localhost:5000 (local) or http://your-ip:5000 (network)
-- **Best for**: Sharing with other devices on your network
+4. **Configure Wiki.js API (optional):**
+   - The application includes a pre-configured API key for Wiki.js
+   - Edit `WIKIJS_BASE_URL` and `WIKIJS_API_KEY` in `botv2.py` if needed
 
 ## Usage
 
-1. **Ensure Ollama is running**
-   - Make sure Ollama service is started: `ollama serve`
-   - Verify the model is available: `ollama list`
+1. **Start the Flask application:**
+   ```bash
+   python botv2.py
+   ```
 
-2. **Start the Flask application**
-   - Run one of the Python files as shown above
+2. **Access the application:**
+   - Main chat interface: http://localhost:5000
+   - Test page: http://localhost:5000/test
 
-3. **Open your web browser**
-   - Navigate to http://localhost:5000
-   - You'll see the chat interface
-
-4. **Start chatting**
-   - Type your message in the input field
-   - Press Enter or click "Send"
-   - The AI will respond using the Ollama model
-
-5. **Additional features**
-   - Use the "Clear Conversation" button to reset the chat
-   - Code blocks are automatically formatted with syntax highlighting
-   - Click "Copy" on code blocks to copy code to clipboard
+3. **Test connections:**
+   - Visit http://localhost:5000/test to check all connections
+   - Test Ollama, Wiki.js connectivity, and API functionality
 
 ## Configuration
 
-### Changing the AI Model
-To use a different Ollama model, modify the `OLLAMA_MODEL` variable in either `app.py` or `botv2.py`:
+### Model Selection
+
+Edit the `OLLAMA_MODEL` variable in `botv2.py` to use a different model:
 
 ```python
-OLLAMA_MODEL = 'your-model-name:version'
+OLLAMA_MODEL = 'llama3.1:latest'  # Change to your preferred model
 ```
 
-### Changing the Ollama URL
-If Ollama is running on a different port or host, modify the `OLLAMA_URL`:
+### Wiki.js Configuration
+
+The application includes Wiki.js API integration. You can modify these settings in `botv2.py`:
 
 ```python
-OLLAMA_URL = 'http://your-host:port/api/generate'
+WIKIJS_BASE_URL = 'http://192.168.5.66:3000'
+WIKIJS_API_KEY = 'your-api-key-here'
 ```
 
-### Changing the Flask Port
-If port 5000 is in use, modify the port in the Python files:
+### Available Models
 
-```python
-app.run(debug=True, port=5001)  # Change port number as needed
+To see available models, visit http://localhost:5000/test or run:
+```bash
+ollama list
 ```
+
+## API Endpoints
+
+- `GET /` - Main chat interface
+- `GET /test` - Test and troubleshooting page
+- `POST /ask` - Send a prompt to the AI
+- `GET /health` - Health check endpoint
+- `GET /models` - List available Ollama models
+- `POST /test-simple` - Simple test endpoint
+- `GET /test-wiki` - Test Wiki.js connectivity
+- `GET /test-wiki-api` - Test Wiki.js API functionality
+- `GET /wiki-pages` - List all Wiki.js pages
+- `POST /fetch-url` - Fetch content from any URL
+
+## Chat Features
+
+### URL Content Analysis
+
+The chatbot can automatically detect URLs in prompts and fetch content:
+
+- **Wiki.js URLs**: Uses the API for structured content access
+- **Other URLs**: Scrapes and extracts meaningful text content
+- **Content Processing**: Converts HTML to clean text for AI analysis
+
+### Example Prompts
+
+- *"Can you access content from http://192.168.5.66:3000/"*
+- *"What pages are available on the Wiki.js server?"*
+- *"Summarize the content from http://example.com"*
 
 ## Troubleshooting
 
 ### Common Issues
 
-1. **"Error communicating with Ollama"**
-   - Ensure Ollama is running: `ollama serve`
-   - Check if the model is installed: `ollama list`
-   - Verify the model name in the code matches your installed model
+1. **"Ollama not found" error:**
+   - Make sure Ollama is installed from https://ollama.ai/
+   - Add Ollama to your system PATH
 
-2. **Port already in use**
-   - Change the port in the Python file as shown in Configuration section
-   - Or stop other services using port 5000
+2. **"Cannot connect to Ollama" error:**
+   - Start Ollama service: `ollama serve`
+   - Check if port 11434 is accessible
+   - Verify firewall settings
 
-3. **Model not found**
-   - Pull the required model: `ollama pull llama3.1:latest`
-   - Or use a different model you have installed
+3. **"Model not found" error:**
+   - Pull the model first: `ollama pull [model-name]`
+   - Check available models: `ollama list`
 
-4. **Python dependencies missing**
-   - Install required packages: `pip install -r requirements.txt`
+4. **"Wiki.js API error":**
+   - Verify the API key is correct
+   - Check if Wiki.js is running and accessible
+   - Ensure the API endpoints are enabled
 
-5. **Python not found**
-   - Install Python from [python.org](https://www.python.org/downloads/)
-   - Make sure to check "Add Python to PATH" during installation
-   - Or disable Python app execution aliases in Windows Settings
+5. **Unicode/encoding errors (Windows):**
+   - The application now handles Windows encoding issues automatically
+   - If problems persist, try running as administrator
 
-### Checking Ollama Status
-```bash
-# Check if Ollama is running
-ollama list
+6. **Timeout errors:**
+   - Increase timeout values in the code if needed
+   - Check your system's performance and available memory
 
-# Check available models
-ollama ps
+### Windows-Specific Notes
 
-# Restart Ollama if needed
-ollama serve
-```
+- The application uses `CREATE_NO_WINDOW` flag to hide console windows
+- UTF-8 encoding with error replacement is used for subprocess calls
+- Windows-specific error handling is implemented
 
-## File Structure
+### Testing
 
-```
-CodeReview/
-├── app.py              # Main Flask application (local access only)
-├── botv2.py            # Alternative version (network accessible)
-├── requirements.txt    # Python dependencies
-├── templates/
-│   └── index.html      # Web interface template
-└── README.md           # This file
-```
-
-## Technical Details
-
-- **Backend**: Flask web framework
-- **Frontend**: Vanilla JavaScript with Prism.js for syntax highlighting
-- **API Endpoint**: Both versions use `/ask` endpoint for consistency
-- **Data Format**: Frontend sends `{prompt: "user message"}` and expects `{response: "ai response"}`
-- **Ollama Integration**: HTTP API calls to Ollama's generate endpoint
+Use the test page at http://localhost:5000/test to:
+- Check if Ollama is running
+- List available models
+- Test Wiki.js connectivity and API
+- Test simple prompts
+- Get troubleshooting guidance
 
 ## Development
 
-- The application uses Flask for the web framework
-- Frontend uses vanilla JavaScript with Prism.js for syntax highlighting
-- Communication with Ollama is done via HTTP API calls
-- Both `app.py` and `botv2.py` use the same `/ask` endpoint for consistency
-- The interface supports code block formatting with syntax highlighting and copy functionality
+### Project Structure
+
+```
+CodeReview/
+├── botv2.py              # Main Flask application
+├── requirements.txt      # Python dependencies
+├── README.md            # This file
+└── templates/
+    ├── index.html       # Main chat interface
+    └── test.html        # Test and troubleshooting page
+```
+
+### Adding Features
+
+- The application is modular and easy to extend
+- Add new routes in `botv2.py`
+- Modify templates in the `templates/` directory
+- Update `requirements.txt` for new dependencies
 
 ## License
 
-
-This project is open source. Feel free to modify and distribute as needed. 
+This project is open source and available under the MIT License. 
